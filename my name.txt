@@ -1,1 +1,2 @@
 name:vaishnavi
+college name:aditya degree college,vizianagaram
