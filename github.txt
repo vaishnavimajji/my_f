@@ -1,3 +1,0 @@
-name:vaishnavi
-course:BCA
-GITHUB:github helps merge,track and resolve conflicts
