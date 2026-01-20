@@ -1,31 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Simple Page</title>
-  <link rel="stylesheet" href="style.css"> <!-- Linking to external CSS -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake News Detector</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="container">
+        <h1>📰 Fake News Detector</h1>
+        <textarea id="newsInput" placeholder="Paste or type your news article or headline here..."></textarea>
+        <button onclick="checkFakeNews()">Check News</button>
+        <div id="result" class="result"></div>
+    </div>
 
-  <header>
-    <h1>Welcome to My Website</h1>
-  </header>
+    <script>
+        async function checkFakeNews() {
+            const text = document.getElementById('newsInput').value;
+            const resultBox = document.getElementById('result');
+            resultBox.innerHTML = 'Checking...';
 
-  <nav>
-    <a href="#">Home</a>
-    <a href="#">About</a>
-    <a href="#">Contact</a>
-  </nav>
+            try {
+                const response = await fetch('http://localhost:5000/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: text })
+                });
 
-  <main>
-    <h2>About This Site</h2>
-    <p>This is a simple web page using external CSS for styling.</p>
-  </main>
-
-  <footer>
-    <p>&copy; 2025 My Website</p>
-  </footer>
-
+                const data = await response.json();
+                const color = data.prediction.toLowerCase() === 'fake' ? '#ff4d4d' : '#4caf50';
+                resultBox.innerHTML = `
+                    <p><strong>Prediction:</strong> ${data.prediction}</p>
+                    <p><strong>Confidence:</strong> ${data.confidence}</p>
+                `;
+                resultBox.style.borderColor = color;
+            } catch (error) {
+                resultBox.innerHTML = 'Error checking news. Make sure the server is running.';
+                resultBox.style.borderColor = '#ff9900';
+            }
+        }
+    </script>
 </body>
 </html>
-
